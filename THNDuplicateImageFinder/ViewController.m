@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "THNDuplicateImageFinder.h"
+#import "THNDuplicateNameFinder.h"
 
 @interface ViewController ()
 
@@ -49,7 +50,32 @@
     if (duplicateImageArray.count == 0) {
         self.resultTextView.string = @"不存在重复图片";
     } else {
-        self.resultTextView.string = [NSString stringWithFormat:@"%@", duplicateImageArray];
+        self.resultTextView.string = [NSString stringWithFormat:@"内容重复的图片[数量 %ld]：\n%@", duplicateImageArray.count, duplicateImageArray];
+    }
+}
+
+- (IBAction)duplicateNameAction:(id)sender {
+    self.resultTextView.string = @"";
+    
+    // 查找工程目录下重复出现的图片
+    
+    // mac下的工程目录绝对路径
+    NSString *path = self.pathTextFiled.stringValue;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        self.resultTextView.string = @"路径不存在";
+        return;
+    }
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF ENDSWITH[c] 'png'"];
+    NSArray *sourceArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:path error:nil];
+    NSArray *pictureArray = [sourceArray filteredArrayUsingPredicate:predicate];
+    
+    NSArray *duplicateNameArray = [THNDuplicateNameFinder findDuplicateNameWithPathArray:pictureArray];
+    
+    if (duplicateNameArray.count == 0) {
+        self.resultTextView.string = @"不存在重复名称";
+    } else {
+        self.resultTextView.string = [NSString stringWithFormat:@"名称重复的图片[数量 %ld]：\n%@", duplicateNameArray.count, duplicateNameArray];
     }
 }
 
