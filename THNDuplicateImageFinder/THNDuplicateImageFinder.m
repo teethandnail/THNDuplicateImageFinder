@@ -7,134 +7,53 @@
 //
 
 #import "THNDuplicateImageFinder.h"
-#import <CommonCrypto/CommonDigest.h>
-
-#define FileHashDefaultChunkSizeForReadingData 1024*1024
+#import "THNMD5.h"
 
 @implementation THNDuplicateImageFinder
 
-/*!
- * 查找图片内容相同的图片
+/**
+ * 通过图片的md5值，找出重复的图片
  *
+ * @param path 工程主目录
+ * @param subPathArray 图片在工程目录中的位置
+ * @return 重复图片数组
  */
-+ (NSArray *)findDuplicateWithPathHead:(NSString *)pathHead shortPathArray:(NSArray *)pathArray {
++ (NSArray *)md5FindDuplicateImageAtPath:(NSString *)path subPathArray:(NSArray *)subPathArray {
     
-    // 每个md5对应的图片数大于等于1
-    NSMutableDictionary *exitDic = [NSMutableDictionary dictionary];
+    // 思路：把相同md5值的图片放入同一数组。如果数组元素数>1，该数组里的图片就是重复图片
     
-    for (NSString *imageName in pathArray) {
-        NSString *fullPath = [NSString stringWithFormat:@"%@/%@", pathHead, imageName];
+    NSMutableDictionary *imagesDic = [NSMutableDictionary dictionary];
+    for (NSString *subPath in subPathArray) {
+        // 算出图片的md5值
+        NSString *imagePath = [NSString stringWithFormat:@"%@/%@", path, subPath];
+        NSString *itemMd5 = [THNMD5 getFileMD5WithPath:imagePath];
         
-        NSString *itemMd5 = [THNDuplicateImageFinder getFileMD5WithPath:fullPath];
-        if (!imageName || !itemMd5) {
-            NSLog(@"error : name=%@,md5=%@", imageName, itemMd5);
+        if (!subPath || !itemMd5) {
             continue;
         }
         
-        NSMutableArray *exitArray = exitDic[itemMd5];
+        // md5值相同的图片放入同一数组
+        NSMutableArray *exitArray = imagesDic[itemMd5];
         if (!exitArray) {
             NSMutableArray *itemNameArray = [NSMutableArray array];
-            [itemNameArray addObject:imageName];
-            [exitDic setObject:itemNameArray forKey:itemMd5];
+            [itemNameArray addObject:subPath];
+            [imagesDic setObject:itemNameArray forKey:itemMd5];
         } else {
-            [exitArray addObject:imageName];
+            [exitArray addObject:subPath];
         }
     }
     
-    // md5对应的图片数大于1
-    NSMutableArray *duplicateImageArray = [NSMutableArray array];
+    // 找图片数>1的数组，放入结果数组中
+    NSMutableArray *resultsArray = [NSMutableArray array];
     
-    for (NSString *itemMd5 in exitDic.allKeys) {
-        NSArray *itemNameArray = exitDic[itemMd5];
+    for (NSString *itemMd5 in imagesDic.allKeys) {
+        NSArray *itemNameArray = imagesDic[itemMd5];
         if (itemNameArray.count > 1) {
-            [duplicateImageArray addObject:itemNameArray];
+            [resultsArray addObject:itemNameArray];
         }
     }
     
-    return [NSArray arrayWithArray:duplicateImageArray];
-}
-
-+(NSString*)getFileMD5WithPath:(NSString*)path
-{
-    return (__bridge_transfer NSString *)FileMD5HashCreateWithPath((__bridge CFStringRef)path,FileHashDefaultChunkSizeForReadingData);
-}
-
-CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath, size_t chunkSizeForReadingData) {
-    // Declare needed variables
-    CFStringRef result = NULL;
-    CFReadStreamRef readStream = NULL;
-    
-    // Get the file URL
-    CFURLRef fileURL =
-    CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                  (CFStringRef)filePath,
-                                  kCFURLPOSIXPathStyle,
-                                  (Boolean)false);
-    
-    CC_MD5_CTX hashObject;
-    bool hasMoreData = true;
-    bool didSucceed;
-    
-    if (!fileURL) goto done;
-    
-    // Create and open the read stream
-    readStream = CFReadStreamCreateWithFile(kCFAllocatorDefault,
-                                            (CFURLRef)fileURL);
-    if (!readStream) goto done;
-    didSucceed = (bool)CFReadStreamOpen(readStream);
-    if (!didSucceed) goto done;
-    
-    // Initialize the hash object
-    CC_MD5_Init(&hashObject);
-    
-    // Make sure chunkSizeForReadingData is valid
-    if (!chunkSizeForReadingData) {
-        chunkSizeForReadingData = FileHashDefaultChunkSizeForReadingData;
-    }
-    
-    // Feed the data to the hash object
-    while (hasMoreData) {
-        uint8_t buffer[chunkSizeForReadingData];
-        CFIndex readBytesCount = CFReadStreamRead(readStream,
-                                                  (UInt8 *)buffer,
-                                                  (CFIndex)sizeof(buffer));
-        if (readBytesCount == -1)break;
-        if (readBytesCount == 0) {
-            hasMoreData =false;
-            continue;
-        }
-        CC_MD5_Update(&hashObject,(const void *)buffer,(CC_LONG)readBytesCount);
-    }
-    
-    // Check if the read operation succeeded
-    didSucceed = !hasMoreData;
-    
-    // Compute the hash digest
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    CC_MD5_Final(digest, &hashObject);
-    
-    // Abort if the read operation failed
-    if (!didSucceed) goto done;
-    
-    // Compute the string result
-    char hash[2 *sizeof(digest) + 1];
-    for (size_t i =0; i < sizeof(digest); ++i) {
-        snprintf(hash + (2 * i),3, "%02x", (int)(digest[i]));
-    }
-    result = CFStringCreateWithCString(kCFAllocatorDefault,
-                                       (const char *)hash,
-                                       kCFStringEncodingUTF8);
-    
-done:
-    
-    if (readStream) {
-        CFReadStreamClose(readStream);
-        CFRelease(readStream);
-    }
-    if (fileURL) {
-        CFRelease(fileURL);
-    }
-    return result;
+    return [NSArray arrayWithArray:resultsArray];
 }
 
 @end

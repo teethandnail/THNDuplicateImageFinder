@@ -13,7 +13,7 @@
 		66C9F7351F0A146500E501DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66C9F7341F0A146500E501DD /* Assets.xcassets */; };
 		66C9F7381F0A146500E501DD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66C9F7361F0A146500E501DD /* Main.storyboard */; };
 		66C9F7411F0A14E700E501DD /* THNDuplicateImageFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9F7401F0A14E700E501DD /* THNDuplicateImageFinder.m */; };
-		66C9F7491F0A498C00E501DD /* THNDuplicateNameFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C9F7481F0A498C00E501DD /* THNDuplicateNameFinder.m */; };
+		66FB6FF61F3871480095B32E /* THNMD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FB6FF51F3871480095B32E /* THNMD5.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +28,8 @@
 		66C9F7391F0A146500E501DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66C9F73F1F0A14E700E501DD /* THNDuplicateImageFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THNDuplicateImageFinder.h; sourceTree = "<group>"; };
 		66C9F7401F0A14E700E501DD /* THNDuplicateImageFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THNDuplicateImageFinder.m; sourceTree = "<group>"; };
-		66C9F7471F0A498C00E501DD /* THNDuplicateNameFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THNDuplicateNameFinder.h; sourceTree = "<group>"; };
-		66C9F7481F0A498C00E501DD /* THNDuplicateNameFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THNDuplicateNameFinder.m; sourceTree = "<group>"; };
+		66FB6FF41F3871480095B32E /* THNMD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THNMD5.h; sourceTree = "<group>"; };
+		66FB6FF51F3871480095B32E /* THNMD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THNMD5.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,10 +62,10 @@
 		66C9F72A1F0A146500E501DD /* THNDuplicateImageFinder */ = {
 			isa = PBXGroup;
 			children = (
-				66C9F7471F0A498C00E501DD /* THNDuplicateNameFinder.h */,
-				66C9F7481F0A498C00E501DD /* THNDuplicateNameFinder.m */,
 				66C9F73F1F0A14E700E501DD /* THNDuplicateImageFinder.h */,
 				66C9F7401F0A14E700E501DD /* THNDuplicateImageFinder.m */,
+				66FB6FF41F3871480095B32E /* THNMD5.h */,
+				66FB6FF51F3871480095B32E /* THNMD5.m */,
 				66C9F72B1F0A146500E501DD /* AppDelegate.h */,
 				66C9F72C1F0A146500E501DD /* AppDelegate.m */,
 				66C9F7311F0A146500E501DD /* ViewController.h */,
@@ -157,11 +157,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66C9F7491F0A498C00E501DD /* THNDuplicateNameFinder.m in Sources */,
 				66C9F7411F0A14E700E501DD /* THNDuplicateImageFinder.m in Sources */,
 				66C9F7331F0A146500E501DD /* ViewController.m in Sources */,
 				66C9F7301F0A146500E501DD /* main.m in Sources */,
 				66C9F72D1F0A146500E501DD /* AppDelegate.m in Sources */,
+				66FB6FF61F3871480095B32E /* THNMD5.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

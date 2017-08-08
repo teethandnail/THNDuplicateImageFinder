@@ -10,6 +10,13 @@
 
 @interface THNDuplicateImageFinder : NSObject
 
-+ (NSArray *)findDuplicateWithPathHead:(NSString *)pathHead shortPathArray:(NSArray *)pathArray;
+/**
+ * 通过图片的md5值，找出重复的图片
+ *
+ * @param path 工程主目录
+ * @param subPathArray 图片在工程目录中的位置
+ * @return 重复图片数组
+ */
++ (NSArray *)md5FindDuplicateImageAtPath:(NSString *)path subPathArray:(NSArray *)subPathArray;
 
 @end
